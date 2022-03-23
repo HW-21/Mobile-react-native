@@ -1,16 +1,25 @@
-import { Routes } from '../../src/configs/Routes'
 import { Auth } from '../helpers/core/Auth'
-import { Navigate } from '../helpers/core/Navigate'
-import { Presence } from '../helpers/core/Presence'
-import { Matchers } from '../helpers/matchers'
+import { fillLoginForm } from '../helpers/forms/Login'
 
-describe('Accounts', () => {
+describe('Login', () => {
   beforeEach(async () => {
-    await Auth.FastLogin()
-    await Navigate.ViaDrawer(Routes.Pages.AccountRequest.id)
+    await Auth.FastLogout()
   })
 
-  it('can view the Account screen', async () => {
-    await Presence.Element.Exists(Matchers.Screens.AccountRequest())
+  it('can log in successfully and redirect to the Balances screen', async () => {
+    await fillLoginForm()
+    await Auth.isLoggedIn()
   })
 })
+
+describe('Logout', () => {
+  beforeEach(async () => {
+    await Auth.FastLogin()
+  })
+
+  it('can log out successfully', async () => {
+    await Auth.isLoggedIn()
+    await Auth.LogoutViaDrawer()
+  })
+})
+
